@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styled from '@emotion/styled';
 
 import Error from './Error'
+import { obtenerDiferenciaYear, calcularMarca, obtenerPlan } from '../helper'
 
 const Campo = styled.div`
     display: flex;
@@ -67,17 +68,22 @@ const Form = (props) => {
             setError(true);
             return;
         }
-        return setError(false)
+        // Tendremos una base
+        let resultado = 2000
         // obtener la diferencia de años
+        const diferencia = obtenerDiferenciaYear(year)
+        
         // por cada años hay que restar el 3%
+        resultado -= ((diferencia * 3) * resultado) /100
         // americano 15%
         // asiation 5%
         // europeo 30%
-
+        resultado = calcularMarca(brand) * resultado
         // Básico aumenta 20%
         // Completo aumenta 50%
-
-        // Total
+        resultado = parseFloat(obtenerPlan(plan) * resultado).toFixed(2)
+        console.log(resultado)
+        return setError(false)
     }
 
     return (  
@@ -90,7 +96,7 @@ const Form = (props) => {
                 <Label>Marca</Label>
                 <Select
                     name="brand"
-                    valuer={brand}
+                    value={brand}
                     onChange={obtenerInfo}
                 >
                     <option value="">-- Seleecione --</option>
