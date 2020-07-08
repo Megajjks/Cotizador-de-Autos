@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 
 import Error from "./Error";
@@ -41,7 +42,7 @@ const Button = styled.button`
   }
 `;
 
-const Form = ({ guardarResumen }) => {
+const Form = ({ guardarResumen, setShowSpinner }) => {
   const [datos, setDatos] = useState({
     brand: "",
     year: "",
@@ -81,12 +82,18 @@ const Form = ({ guardarResumen }) => {
     // Básico aumenta 20%
     // Completo aumenta 50%
     resultado = parseFloat(obtenerPlan(plan) * resultado).toFixed(2);
-    console.log(resultado);
-    //Total
-    guardarResumen({
-      cotizacion: resultado,
-      datos,
-    });
+    setShowSpinner(true);
+
+    setTimeout(() => {
+      //Elimina el spinner
+      setShowSpinner(false);
+      //Total
+      guardarResumen({
+        cotizacion: Number(resultado),
+        datos,
+      });
+    }, 2000);
+
     return setError(false);
   };
 
@@ -146,6 +153,11 @@ const Form = ({ guardarResumen }) => {
       <Button type="submit">Cotizar</Button>
     </form>
   );
+};
+
+Form.propTypes = {
+  guardarResumen: PropTypes.func.isRequired,
+  setShowSpinner: PropTypes.func.isRequired,
 };
 
 export default Form;

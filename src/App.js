@@ -4,12 +4,15 @@ import Header from "./components/Header";
 import Form from "./components/Form";
 import Resumen from "./components/Resumen";
 import Resultado from "./components/Resultado";
+import Spinner from "./components/Spinner";
 
 const Contenedor = styled.div`
   max-width: 600px;
   margin: 0 auto;
 `;
 const ContenedorForm = styled.div`
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   padding: 3rem;
 `;
@@ -23,6 +26,7 @@ function App() {
       plan: "",
     },
   });
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const { cotizacion, datos } = resumen;
 
@@ -31,9 +35,14 @@ function App() {
       <Header titulo="Cotizador de seguros" />
 
       <ContenedorForm>
-        <Form guardarResumen={guardarResumen} />
+        <Form guardarResumen={guardarResumen} setShowSpinner={setShowSpinner} />
+        {showSpinner ? (
+          <div style={{ alignSelf: "center", marginTop: "2em" }}>
+            <Spinner />
+          </div>
+        ) : null}
         <Resumen datos={datos} />
-        <Resultado cotizacion={cotizacion} />
+        {!showSpinner ? <Resultado cotizacion={cotizacion} /> : null}
       </ContenedorForm>
     </Contenedor>
   );
